@@ -63,7 +63,9 @@
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TRACE" VALUE="false" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_DRYRUN" VALUE="false" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_PREREQS" VALUE="false" />
+      <RunnerSettings RunnerId="RubyDebugRunner" />
       <RunnerSettings RunnerId="RubyRunner" />
+      <ConfigurationWrapper RunnerId="RubyDebugRunner" />
       <ConfigurationWrapper RunnerId="RubyRunner" />
       <method />
     </configuration>
@@ -83,10 +85,12 @@
     <orderEntry type="library" scope="PROVIDED" name="activerecord (v4.2.1, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.1, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="arel (v6.0.0, RVM: ruby-2.1.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="attr_encrypted (v1.3.4, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="coffee-rails (v4.1.0, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="coffee-script (v2.4.1, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="coffee-script-source (v1.9.1.1, RVM: ruby-2.1.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="encryptor (v1.3.0, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.5.2, RVM: ruby-2.1.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v0.3.5, RVM: ruby-2.1.1) [gem]" level="application" />
