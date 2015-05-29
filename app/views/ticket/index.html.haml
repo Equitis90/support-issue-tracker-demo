@@ -1,0 +1,24 @@
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title SupportIssueTracking
+  %body
+    = form_tag create_ticket_post_path, :method => :post do
+      #name_label
+        = label_tag 'Name:'
+      #name
+        = text_field_tag 'name', 'Joe'
+      #email_label
+        = label_tag 'Email:'
+      #email
+        = email_field_tag 'email', 'email@example.com'
+      #department_label
+        = label_tag 'Department:'
+      #department
+        = select_tag 'departments', options_for_select(@departments, 0)
+      #text_area_label
+        = label_tag 'Your request:'
+      #text
+        = text_area_tag 'text', 'Your request..', size: "30x5"
+        %br
+        = submit_tag 'Create issue ticket'
