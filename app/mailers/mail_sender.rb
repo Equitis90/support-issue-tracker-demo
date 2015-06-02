@@ -4,6 +4,5 @@ class MailSender < ApplicationMailer
     @customer = customer
     @reference = reference
     mail(to: email, subject: 'Ticket created!')
-    format.html { render '' }
   end
 end

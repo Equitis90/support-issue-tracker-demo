@@ -7,11 +7,11 @@
       #name_label
         = label_tag 'Name:'
       #name
-        = text_field_tag 'name', 'Joe'
+        = text_field_tag 'name', '',{:placeholder => 'Joe'}
       #email_label
         = label_tag 'Email:'
       #email
-        = email_field_tag 'email', 'email@example.com'
+        = email_field_tag 'email', '',{:placeholder => 'email@example.com'}
       #department_label
         = label_tag 'Department:'
       #department
@@ -19,6 +19,6 @@
       #text_area_label
         = label_tag 'Your request:'
       #text
-        = text_area_tag 'text', 'Your request..', size: "30x5"
+        = text_area_tag 'text', 'Your request..', :size => "30x5"
         %br
         = submit_tag 'Create issue ticket'
