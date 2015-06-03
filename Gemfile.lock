@@ -133,8 +133,8 @@ PLATFORMS
 DEPENDENCIES
   attr_encrypted
   coffee-rails (~> 4.1.0)
-  haml
-  haml-rails
+  haml (= 4.0.6)
+  haml-rails (~> 0.9)
   jbuilder (~> 2.0)
   jquery-rails
   pg

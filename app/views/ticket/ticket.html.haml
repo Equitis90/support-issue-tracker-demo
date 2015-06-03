@@ -1,0 +1,33 @@
+%div{:class => 'well', :style => 'width: 900px; height: auto; text-align: center; margin: auto; background: #33AD33;'}
+  %p{:style => 'color:brown; font-size: 150%; font-weight: bold;'}= "Ticket #{@ticket.title}"
+  %br
+  - @ticket.ticket_messages.order('created_at asc').each do |message|
+    %div{:style => 'text-align: left; border-radius: 15px 15px 15px; padding: 5px; margin-bottom: 5px; background: lightgreen;'}
+      = label_tag 'Creator:'
+      - if message.user_id
+        = User.where(id: message.user_id).first.try(:username)
+      - else
+        Customer
+      = label_tag 'Created:'
+      = message.created_at.strftime("%d/%m/%Y %H:%M:%S")
+      %br
+      #center{:style => 'text-align: center'}
+        = text_area_tag "message_#{message.id}", message.text, :size => '100x4', :disabled => true
+      #right{:style => 'text-align: right; margin-right: 10px'}
+        %button{:class => 'quote btn btn-warning', :id => "#{message.id}"} Quote
+%br
+#new_message{:class => 'well', :style => 'width:900px; margin: auto; background: #A3FFD1;'}
+  = form_tag ticket_add_message_post_path, :method => :post do
+    = label_tag 'You answer:'
+    #center{:style => 'text-align: center'}
+      = text_area_tag 'ticket_message', '', :size => '100x4'
+    %br
+    = text_field_tag 'ticket_reference', @ticket.title , {:hidden => true}
+    = submit_tag 'Add answer', :class => 'btn btn-success', data: {:disable_with => '...'}
+
+:javascript
+  $( document ).ready(function() {
+   $('.quote').click(function(event) {
+    $('#ticket_message').val($('#ticket_message').val() + 'quote------->\n' + $('#message_' +this.id).val() + '\n--------------<\n')
+   });
+  });

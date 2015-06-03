@@ -9,6 +9,6 @@ class Ticket < ActiveRecord::Base
   end
 
   def send_mail
-    MailSender.ticket_created_mail(self.creator_name, self.creator_email, self.title).deliver
+    CustomerMailSender.ticket_created_mail(self.creator_name, self.creator_email, self.title).deliver
   end
 end
