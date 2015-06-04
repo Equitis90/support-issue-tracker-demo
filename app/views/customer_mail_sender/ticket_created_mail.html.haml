@@ -3,4 +3,4 @@
     %meta{:content => 'text/html; charset=UTF-8', "http-equiv" => 'Content-Type'}
   %body
     %h1= "Hi #{@customer}"
-    %p= "Ticket has been created. It's reference #{@reference}"
+    %p= "Ticket has been created. It's reference #{ link_to @reference, ticket_url(:reference => @reference) }".html_safe

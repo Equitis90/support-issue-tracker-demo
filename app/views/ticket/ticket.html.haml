@@ -1,5 +1,11 @@
 %div{:class => 'well', :style => 'width: 900px; height: auto; text-align: center; margin: auto; background: #33AD33;'}
   %p{:style => 'color:brown; font-size: 150%; font-weight: bold;'}= "Ticket #{@ticket.title}"
+  = label_tag 'Created by:'
+  %p{:style => 'color:brown; font-size: 110%; text-align: left; display: inline-block; margin-right: 465px;'}= @ticket.creator_name
+  = label_tag 'Ticket status:'
+  %p{:style => 'color:brown; font-size: 110%; text-align: right; display: inline-block;'}= TicketStatus.where(id:@ticket.ticket_status_id).first.try(:title)
+  = label_tag 'Ticket department:'
+  %p{:style => 'color:brown; font-size: 110%; display: inline-block; margin-right: 615px;'}= Department.where(id: @ticket.department_id).first.try(:title)
   %br
   - @ticket.ticket_messages.order('created_at asc').each do |message|
     %div{:style => 'text-align: left; border-radius: 15px 15px 15px; padding: 5px; margin-bottom: 5px; background: lightgreen;'}
@@ -18,7 +24,7 @@
 %br
 #new_message{:class => 'well', :style => 'width:900px; margin: auto; background: #A3FFD1;'}
   = form_tag ticket_add_message_post_path, :method => :post do
-    = label_tag 'You answer:'
+    = label_tag 'Type answer here:'
     #center{:style => 'text-align: center'}
       = text_area_tag 'ticket_message', '', :size => '100x4'
     %br

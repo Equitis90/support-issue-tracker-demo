@@ -12,8 +12,11 @@ class TicketController < ApplicationController
                             creator_name: params[:name], creator_email: params[:email])
     if ticket
       TicketMessage.create!(ticket_id: ticket.id, text: params[:text])
+      redirect_to ticket_path :reference => ticket.title
+    else
+      flash[:danger] = "Something went wrong!"
+      redirect_to root_path
     end
-    redirect_to root_path
   end
 
   def search_ticket

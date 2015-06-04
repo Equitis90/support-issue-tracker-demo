@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   get "search_ticket" => "ticket#search_ticket"
   get "ticket" => "ticket#ticket"
   post "ticket_add_message_post" => "ticket#ticket_add_message_post"
+  get "admin" => "admin#admin"
+  post "log_in_post" => "admin#log_in_post"
+  get "user" => "admin#user"
+  post "log_out_post" => "admin#log_out_post"
 end

@@ -5,6 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+User.create!(:login => "admin", :password => '123', :admin => true, :username => 'admin')
+
+Department.create!(title: 'General issues')
+
 departments_list = [
     "Second department",
     "Third department",

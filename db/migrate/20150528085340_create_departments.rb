@@ -5,6 +5,5 @@ class CreateDepartments < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-    Department.create!(title: 'General issues')
   end
 end

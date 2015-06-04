@@ -1,0 +1,13 @@
+%div{:class => 'well centered', :style => 'width: 400px; height: 230px'}
+  = form_tag log_in_post_path, :method => :post do
+    #login_label
+      = label_tag 'login:'
+    #login
+      = text_field_tag 'login', '', {:size => '30'}
+    %br
+    #password_label
+      = label_tag 'password:'
+    #password
+      = password_field_tag 'password', '', {:size => '30'}
+    %br
+    = submit_tag 'Log in', :class => 'btn btn-success'

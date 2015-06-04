@@ -17,6 +17,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  host: 127.0.0.1
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
@@ -65,6 +66,7 @@ development:
 test:
   <<: *default
   database: support_iIssue_tracking_test
+  host: 127.0.0.1
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -90,3 +92,4 @@ production:
   database: support_iIssue_tracking_production
   username: support_iIssue_tracking
   password: <%= ENV['SUPPORT_IISSUE_TRACKING_DATABASE_PASSWORD'] %>
+  host: 127.0.0.1
