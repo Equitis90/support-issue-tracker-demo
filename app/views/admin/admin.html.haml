@@ -1,4 +1,4 @@
-%div{:class => 'well centered', :style => 'width: 400px; height: 230px'}
+%div{:class => ['well', 'centered'], :style => 'width: 400px; height: 230px'}
   = form_tag log_in_post_path, :method => :post do
     #login_label
       = label_tag 'login:'

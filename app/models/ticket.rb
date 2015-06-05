@@ -1,5 +1,7 @@
 class Ticket < ActiveRecord::Base
   has_many :ticket_messages, :inverse_of => :ticket
+  belongs_to :department
+  belongs_to :ticket_status
 
   after_create :assign_reference, :send_mail
 

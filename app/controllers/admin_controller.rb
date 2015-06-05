@@ -9,19 +9,29 @@ class AdminController < ApplicationController
 
   def admin
     if session[:user]
-      redirect_to user_path
+      redirect_to tickets_path
     end
   end
 
-  def user
-    @user = User.where(id: session[:user]).first
+  def tickets
+    @tickets = []
+    user = User.where(id: session[:user]).first
+    @user = {id: user.id, username: user.username, department_id: user.department_id}
+    if user.department_id
+
+    else
+      Ticket.joins(:department, :ticket_status).all.each do |ticket|
+        @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                     creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+      end
+    end
   end
 
   def log_in_post
     user = User.where(login: params[:login], encrypted_password: User.encrypt_password(params[:password])).first
     if user
       session[:user] = user.id
-      redirect_to user_path
+      redirect_to tickets_path
     else
       flash[:danger] = 'Wrong login or password!'
       redirect_to admin_path

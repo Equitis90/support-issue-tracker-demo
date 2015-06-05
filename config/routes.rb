@@ -7,6 +7,6 @@ Rails.application.routes.draw do
   post "ticket_add_message_post" => "ticket#ticket_add_message_post"
   get "admin" => "admin#admin"
   post "log_in_post" => "admin#log_in_post"
-  get "user" => "admin#user"
+  get "tickets" => "admin#tickets"
   post "log_out_post" => "admin#log_out_post"
 end

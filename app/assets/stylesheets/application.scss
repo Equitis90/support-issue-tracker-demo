@@ -1,0 +1,17 @@
+@import "dataTables/jquery.dataTables";
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+.centered, .centered-top{
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.centered {
+    top: 50%;
+}
+
+.centered-top {
+    top: 15% !important;
+}

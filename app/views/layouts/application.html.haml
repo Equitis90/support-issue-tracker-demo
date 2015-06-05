@@ -17,7 +17,7 @@
         - if session[:user]
           %ul{:class => "nav navbar-nav"}
             %li{:class => "active"}
-              %a{:href => "#"}= @user.username
+              %a{:href => tickets_path}= @user[:username]
           =form_tag log_out_post_path, :class => "navbar-form navbar-right", :method => :post do
             = submit_tag 'Log out', :class => "btn btn-info"
     - unless flash.empty?
@@ -25,4 +25,5 @@
         %div{:class => "centered-top alert alert-#{key}", :style => 'width: 50%'}
           %a{:class => "close", "data-dismiss" => "alert"} &#215;
           = content_tag :div, value, :id => "flash_#{key}", :style => "text-align:center"
+        %br
     = yield
