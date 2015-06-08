@@ -79,6 +79,6 @@ class AdminController < ApplicationController
       end
     end
 
-
+    render :layout => false
   end
 end
