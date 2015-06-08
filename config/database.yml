@@ -27,8 +27,8 @@ development:
   encoding: unicode
   database: sit
   pool: 50
-  username: vlad
-  password: '123'
+  username: postgres
+  password: 'Morrowind_6362'
   host: 127.0.0.1
   #host: 91.198.83.234
   insert_returning: false

@@ -49,7 +49,7 @@ class TicketController < ApplicationController
       ticket = Ticket.where(title: params[:ticket_reference]).first
       if ticket
         message = TicketMessage.new(text: params[:ticket_message], ticket_id: ticket.id)
-        message.user_id = session[:user].id if session[:user]
+        message.user_id = session[:user].to_i if session[:user] && session[:user].to_i != 0
         message.save!
         redirect_to ticket_path :reference => params[:ticket_reference]
       else

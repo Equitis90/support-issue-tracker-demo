@@ -1,0 +1,35 @@
+#table{:style => 'border-radius: 25px; padding: 20px; background: #B8E6B8;'}
+  %table{:id => "table_id#{@status_id.nil? ? '' : @status_id}", :class => "display"}
+    %thead
+      %tr
+        %th ID
+        %th Reference
+        %th Department
+        %th Status
+        %th Creator_name
+        %th Creator_email
+    %tbody
+      -@tickets.each do |ticket|
+        %tr
+          %td= ticket[:id]
+          %td= link_to ticket[:reference], ticket_path(:reference => ticket[:reference])
+          %td= ticket[:department]
+          %td= ticket[:status]
+          %td= ticket[:creator_name]
+          %td= ticket[:creator_email]
+
+:javascript
+    $(document).ready( function () {
+    var array = [0];
+    if("#{@user[:department_id]}" != "") array[1] = 2;
+    $("#table_id#{@status_id.nil? ? '' : @status_id}").DataTable({
+    "order": [[ 1, "asc" ]],
+    "bDestroy": true,
+    "columnDefs": [
+            {
+                "targets": array,
+                "visible": false
+            }
+        ]
+    });
+    });

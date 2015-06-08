@@ -15,32 +15,15 @@ class AdminController < ApplicationController
 
   def tickets
     @tickets = []
-    @active_tab = 0
-    status_id = 0
-    status_id = params[:id].gsub('#', '').to_i if params[:id] && params[:id] != '#all'
     user = User.where(id: session[:user]).first
     @user = {id: user.id, username: user.username, department_id: user.department_id}
     if user.department_id
-      tickets = nil
-      if status_id != 0
-        tickets = Ticket.joins(:department, :ticket_status).where(department_id: user.department_id, ticket_status_id: status_id)
-        @active_tab = status_id
-      else
-        tickets = Ticket.joins(:department, :ticket_status).where(department_id: user.department_id)
-      end
-      tickets.each do |ticket|
+      Ticket.joins(:department, :ticket_status).where(department_id: user.department_id).each do |ticket|
         @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                      creator_name: ticket.creator_name, creator_email: ticket.creator_email}
       end
     else
-      tickets = nil
-      if status_id != 0
-        tickets = Ticket.joins(:department, :ticket_status).where(ticket_status_id: status_id)
-        @active_tab = status_id
-      else
-        tickets = Ticket.joins(:department, :ticket_status).all
-      end
-      tickets.each do |ticket|
+      Ticket.joins(:department, :ticket_status).all.each do |ticket|
         @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                      creator_name: ticket.creator_name, creator_email: ticket.creator_email}
       end
@@ -61,5 +44,41 @@ class AdminController < ApplicationController
   def log_out_post
     session[:user] = nil
     redirect_to root_path
+  end
+
+  def tickets_list_partial
+    status_id = params[:id].to_i if params[:id] && params[:id].to_i != 0
+    @status_id = status_id
+    @tickets = []
+    user = User.where(id: session[:user]).first
+    @user = {id: user.id, username: user.username, department_id: user.department_id}
+    tickets = Ticket.joins(:department, :ticket_status)
+    if user.department_id
+      if status_id
+        tickets.where(department_id: user.department_id, ticket_status_id: status_id).each do |ticket|
+          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        end
+      else
+        tickets.where(department_id: user.department_id).each do |ticket|
+          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        end
+      end
+    else
+      if status_id
+        Ticket.joins(:department, :ticket_status).where(ticket_status_id: status_id).each do |ticket|
+          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        end
+      else
+        Ticket.joins(:department, :ticket_status).all.each do |ticket|
+          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        end
+      end
+    end
+
+    render :layout => false
   end
 end
