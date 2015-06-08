@@ -15,12 +15,32 @@ class AdminController < ApplicationController
 
   def tickets
     @tickets = []
+    @active_tab = 0
+    status_id = 0
+    status_id = params[:id].gsub('#', '').to_i if params[:id] && params[:id] != '#all'
     user = User.where(id: session[:user]).first
     @user = {id: user.id, username: user.username, department_id: user.department_id}
     if user.department_id
-
+      tickets = nil
+      if status_id != 0
+        tickets = Ticket.joins(:department, :ticket_status).where(department_id: user.department_id, ticket_status_id: status_id)
+        @active_tab = status_id
+      else
+        tickets = Ticket.joins(:department, :ticket_status).where(department_id: user.department_id)
+      end
+      tickets.each do |ticket|
+        @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
+                     creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+      end
     else
-      Ticket.joins(:department, :ticket_status).all.each do |ticket|
+      tickets = nil
+      if status_id != 0
+        tickets = Ticket.joins(:department, :ticket_status).where(ticket_status_id: status_id)
+        @active_tab = status_id
+      else
+        tickets = Ticket.joins(:department, :ticket_status).all
+      end
+      tickets.each do |ticket|
         @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                      creator_name: ticket.creator_name, creator_email: ticket.creator_email}
       end

@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   post "log_in_post" => "admin#log_in_post"
   get "tickets" => "admin#tickets"
   post "log_out_post" => "admin#log_out_post"
+  get "get_json_tickets" => "admin#get_json_tickets"
 end
