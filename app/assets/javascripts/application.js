@@ -11,8 +11,9 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery-ui
 //= require jquery_ujs
 //= require bootstrap
+//= require jquery-ui
 //= require dataTables/jquery.dataTables
+//= require dataTables/extras/dataTables.tableTools
 //= require_tree .

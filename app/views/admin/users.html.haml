@@ -1,0 +1,104 @@
+%div{:class => 'well centered'}
+  %h1 Users
+  %br
+  #table{:style => 'border-radius: 25px; padding: 20px; background: #B8E6B8;'}
+    %table{:id => "table_id", :class => "display"}
+      %thead
+        %tr
+          %th ID
+          %th User name
+          %th Login
+          %th Department
+          %th Admin
+      %tbody
+        -@users.each do |user|
+          %tr
+            %td= user[:id]
+            %td= user[:username]
+            %td= user[:login]
+            %td= user[:department]
+            %td= user[:admin]
+
+#dialog{:style => 'display: none'}
+  #login_label
+  = label_tag 'Login:'
+  = text_field_tag 'login', '', {:size => '30'}
+  #username_label
+  = label_tag 'User name:'
+  = text_field_tag 'username', '', {:size => '30'}
+  #department_label
+  = label_tag 'Department:'
+  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 99%"
+  #admin_label
+  = label_tag 'Admin:'
+  = check_box 'admin', ''
+  #password_label
+    = label_tag 'password:'
+  = text_field_tag 'password', '', {:size => '30'}
+  = hidden_field 'id', ''
+
+:javascript
+    $(document).ready( function () {
+      $.fn.dataTable.TableTools.defaults.aButtons = [ "div", "div" ];
+
+      var table = $("#table_id").DataTable({
+        "columnDefs": [
+          {
+              "targets": [0],
+              "visible": false
+          }
+        ],
+        "order": [[ 1, "asc" ]],
+        "sDom": 'T<"clear">lfrtip',
+        "oTableTools": {
+            "aButtons": [
+                {
+                    "sExtends":    "div",
+                    "sButtonText": "New user"
+                },
+                {
+                    "sExtends":    "div",
+                    "sButtonText": "Edit user"
+                }
+            ]
+        }
+      });
+
+      $('#table_id tbody').on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+      } );
+
+      $('#ToolTables_table_id_0').click( function () {
+        $('#dialog').dialog({
+          width: 370,
+          closeText: "",
+          modal: true,
+          resizable: false,
+          title: "New user",
+          buttons: [
+            {
+              text: "Create",
+              click: function() {
+                $.ajax({
+                  method: 'POST',
+                  url: "#{create_user_path}",
+                  data: {login: $('#login').val(), username: $('#username').val(), departments: $('#departments').val(),
+                         password: $('#password').val(), admin: $('#admin').val()},
+                  success: function() {
+                    $( this ).dialog( "close" );
+                    windows.location.href = "#{users_path}";
+                  }
+                });
+              }
+            }
+          ]
+        });
+        //alert(table.row('.selected').data()[0]);
+      } );
+    } );
