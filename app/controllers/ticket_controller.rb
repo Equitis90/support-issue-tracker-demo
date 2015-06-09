@@ -2,7 +2,7 @@ class TicketController < ApplicationController
   def index
     if session[:user]
       user = User.where(id: session[:user]).first
-      @user = {id: user.id, username: user.username, department_id: user.department_id}
+      @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     end
     @departments = []
     Department.all.each do |dep|
@@ -36,7 +36,7 @@ class TicketController < ApplicationController
   def ticket
     if session[:user]
       user = User.where(id: session[:user]).first
-      @user = {id: user.id, username: user.username, department_id: user.department_id}
+      @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     end
     @ticket = Ticket.joins(:ticket_messages).where(title: params[:reference]).first
   end

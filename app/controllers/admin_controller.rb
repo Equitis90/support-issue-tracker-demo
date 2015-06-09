@@ -16,7 +16,7 @@ class AdminController < ApplicationController
   def tickets
     @tickets = []
     user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id}
+    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user.department_id
       Ticket.joins(:department, :ticket_status).where(department_id: user.department_id).each do |ticket|
         @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
@@ -51,7 +51,7 @@ class AdminController < ApplicationController
     @status_id = status_id
     @tickets = []
     user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id}
+    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     tickets = Ticket.joins(:department, :ticket_status)
     if user.department_id
       if status_id
@@ -78,7 +78,34 @@ class AdminController < ApplicationController
         end
       end
     end
-
     render :layout => false
+  end
+
+  def users
+    @departments = []
+    Department.all.each do |dep|
+      @departments << [dep.title, dep.id]
+    end
+    user = User.where(id: session[:user]).first
+    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    if user && user.admin
+      @users = []
+      departments = {}
+      Department.all.each do |dept|
+        departments[dept.id] = dept.title
+      end
+      User.all.each do |user|
+        @users << {id: user.id, username: user.username, login: user.login, admin: user.admin ? 'Yes' : 'No',
+                   department: user.department_id.nil? ? 'Without department' : departments[user.department_id]}
+      end
+    else
+      flash[:danger] = 'You do not have permission to visit this page!'
+      redirect_to tickets_path
+    end
+  end
+
+  def create_user
+    User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin], :username => params[:username])
+    render nothing: true
   end
 end

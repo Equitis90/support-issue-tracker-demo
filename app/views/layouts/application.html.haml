@@ -18,6 +18,9 @@
           %ul{:class => "nav navbar-nav"}
             %li{:class => "active"}
               %a{:href => tickets_path}= @user[:username]
+            - if @user[:admin]
+              %li
+                %a{:href => users_path, :style => "color: black"} Users
           =form_tag log_out_post_path, :class => "navbar-form navbar-right", :method => :post do
             = submit_tag 'Log out', :class => "btn btn-info"
     - unless flash.empty?

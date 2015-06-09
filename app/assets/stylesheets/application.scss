@@ -1,10 +1,12 @@
+@import "dataTables/jquery.dataTables";
+@import "dataTables/extras/dataTables.tableTools";
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "jquery-ui";
+@import "jquery-ui/dialog";
 @import "jquery-ui/core";
 @import "jquery-ui/theme";
 @import "jquery-ui/tabs";
-@import "jquery-ui";
-@import "dataTables/jquery.dataTables";
-@import "bootstrap-sprockets";
-@import "bootstrap";
 
 .centered, .centered-top{
     width: 70%;
