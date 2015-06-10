@@ -20,16 +20,18 @@
 
 :javascript
     $(document).ready( function () {
-    var array = [0];
-    if("#{@user[:department_id]}" != "") array[1] = 2;
-    $("#table_id#{@status_id.nil? ? '' : @status_id}").DataTable({
-    "order": [[ 1, "asc" ]],
-    "bDestroy": true,
-    "columnDefs": [
-            {
-                "targets": array,
-                "visible": false
-            }
-        ]
-    });
+      var array = [0];
+      if("#{@user[:department_id]}" != "") array[1] = 2;
+      $("#table_id#{@status_id.nil? ? '' : @status_id}").DataTable({
+        "aLengthMenu": [5, 10, 15],
+        "iDisplayLength": 5,
+        "order": [[ 1, "asc" ]],
+        "bDestroy": true,
+        "columnDefs": [
+          {
+              "targets": array,
+              "visible": false
+          }
+          ]
+        });
     });

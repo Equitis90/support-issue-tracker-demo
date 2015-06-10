@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   get "tickets_list_partial" => "admin#tickets_list_partial"
   get "users" => "admin#users"
   post "create_user" => "admin#create_user"
+  get "get_user" => "admin#get_user"
+  post "edit_user" => "admin#edit_user"
 end
