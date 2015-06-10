@@ -19,16 +19,17 @@
             %td= user[:department]
             %td= user[:admin]
 
-#dialog{:style => 'display: none'}
+#dialog{:style => 'display: none; text-align: center'}
   #login_label
   = label_tag 'Login:'
+  %br
   = text_field_tag 'login', '', {:size => '30'}
   #username_label
   = label_tag 'User name:'
   = text_field_tag 'username', '', {:size => '30'}
   #department_label
   = label_tag 'Department:'
-  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 99%", :include_blank => true
+  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 80%", :include_blank => true
   #admin_label
   = label_tag 'Admin:'
   = check_box_tag 'admin'
@@ -36,9 +37,14 @@
     = label_tag 'password:'
   = text_field_tag 'password', '', {:size => '30'}
 
+#confirm{:style => 'display: none; text-align: center'}
+  #message Delete user?
+#error{:style => 'display: none; text-align: center'}
+  #message
+
 :javascript
     $(document).ready( function () {
-      $.fn.dataTable.TableTools.defaults.aButtons = [ "div", "div" ];
+      $.fn.dataTable.TableTools.defaults.aButtons = [ "div", "div", "div" ];
 
       var table = $("#table_id").DataTable({
         "aLengthMenu": [5, 10, 15],
@@ -60,6 +66,10 @@
                 {
                     "sExtends":    "div",
                     "sButtonText": "Edit user"
+                },
+                {
+                    "sExtends":    "div",
+                    "sButtonText": "Delete user"
                 }
             ]
         }
@@ -68,16 +78,19 @@
       table.page(parseInt("#{params[:page] || 0}")).draw(false);
 
       $('#ToolTables_table_id_1').addClass('DTTT_disabled');
+      $('#ToolTables_table_id_2').addClass('DTTT_disabled');
 
       $('#table_id tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
             $('#ToolTables_table_id_1').addClass('DTTT_disabled');
+            $('#ToolTables_table_id_2').addClass('DTTT_disabled');
         }
         else {
             table.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
             $('#ToolTables_table_id_1').removeClass('DTTT_disabled');
+            $('#ToolTables_table_id_2').removeClass('DTTT_disabled');
         }
       } );
 
@@ -156,4 +169,37 @@
         }
       } );
 
-    } );
+      $('#ToolTables_table_id_2').click( function () {
+        if(!$('#ToolTables_table_id_2').hasClass('DTTT_disabled')) {
+          $('#confirm').dialog({
+          width: 300,
+          closeText: "",
+          modal: true,
+          resizable: false,
+          title: "Are you sure?",
+          buttons: [
+            {
+              text: "Ok",
+              click: function() {
+                $('#confirm' ).dialog( "close" );
+                $.ajax({
+                  method: 'post',
+                  url: "#{delete_user_path}",
+                  data: {id: table.row('.selected').data()[0]},
+                  success: function() {
+                    window.location.replace("#{users_path}" + '?page=' + table.page());
+                  }
+                });
+              }
+            },
+            {
+              text: "Cancel",
+              click: function() {
+                $('#confirm' ).dialog( "close" );
+              }
+            }
+            ]
+          });
+        }
+      });
+    });

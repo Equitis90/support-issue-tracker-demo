@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   post "create_user" => "admin#create_user"
   get "get_user" => "admin#get_user"
   post "edit_user" => "admin#edit_user"
+  post "delete_user" => "admin#delete_user"
 end

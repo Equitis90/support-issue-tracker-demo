@@ -94,7 +94,7 @@ class AdminController < ApplicationController
       Department.all.each do |dept|
         departments[dept.id] = dept.title
       end
-      User.all.each do |user|
+      User.where("login != 'admin' and username != 'admin'").each do |user|
         @users << {id: user.id, username: user.username, login: user.login, admin: user.admin ? 'Yes' : 'No',
                    department: user.department_id.nil? ? 'Without department' : departments[user.department_id]}
       end
@@ -108,7 +108,7 @@ class AdminController < ApplicationController
     if params[:login].blank? || params[:password].blank? || params[:admin].blank? || params[:username].blank?
       flash[:danger] = "Fill all fields please"
     else
-      dept_id = params[:departments].to_i if params[:departments].to_i == 0
+      dept_id = params[:departments].to_i if params[:departments].to_i != 0
       User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin],
                    :username => params[:username], :department_id => dept_id)
     end
@@ -139,13 +139,38 @@ class AdminController < ApplicationController
   def edit_user
     user = User.where(id: params[:id]).first
     if user
-      dept_id = params[:departments].to_i if params[:departments].to_i != 0
-      user.login = params[:login]
-      user.password = params[:password]
-      user.admin = params[:admin]
-      user.username = params[:username]
-      user.department_id = dept_id
-      user.save!
+      begin
+        dept_id = params[:departments].to_i if params[:departments].to_i != 0
+        user.login = params[:login]
+        user.password = params[:password]
+        user.admin = params[:admin]
+        user.username = params[:username]
+        user.department_id = dept_id
+        user.save!
+      rescue Exception => e
+        flash[:danger] = e
+      end
+    else
+      flash[:danger] = 'User does not exists!'
+    end
+
+    render nothing: true
+  end
+
+  def delete_user
+    user = User.where(id: params[:id].to_i).first
+    if user
+      message = TicketMessage.where(user_id: user.id).first
+      if message
+        flash[:danger] = 'User can not be deleted it has messages!'
+      else
+        begin
+          user.destroy!
+          flash[:success] = 'User deleted!'
+        rescue Exception => e
+          flash[:danger] = e
+        end
+      end
     else
       flash[:danger] = 'User does not exists!'
     end

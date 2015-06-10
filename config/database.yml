@@ -24,7 +24,7 @@ default: &default
 
 development:
   adapter: postgresql
-  encoding: unicode
+  encoding: utf-8
   database: sit
   pool: 50
   username: vlad
