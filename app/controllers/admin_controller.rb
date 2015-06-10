@@ -3,13 +3,13 @@ class AdminController < ApplicationController
   def check_for_user
     unless session[:user]
       flash[:danger] = 'Administrative area please log in!'
-      redirect_to admin_path
+      redirect_to admin_path and return
     end
   end
 
   def admin
     if session[:user]
-      redirect_to tickets_path
+      redirect_to tickets_path and return
     end
   end
 
@@ -34,16 +34,16 @@ class AdminController < ApplicationController
     user = User.where(login: params[:login], encrypted_password: User.encrypt_password(params[:password])).first
     if user
       session[:user] = user.id
-      redirect_to tickets_path
+      redirect_to tickets_path and return
     else
       flash[:danger] = 'Wrong login or password!'
-      redirect_to admin_path
+      redirect_to admin_path and return
     end
   end
 
   def log_out_post
     session[:user] = nil
-    redirect_to root_path
+    redirect_to root_path and return
   end
 
   def tickets_list_partial
@@ -100,12 +100,56 @@ class AdminController < ApplicationController
       end
     else
       flash[:danger] = 'You do not have permission to visit this page!'
-      redirect_to tickets_path
+      redirect_to tickets_path :page => params[:page] || 1 and return
     end
   end
 
   def create_user
-    User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin], :username => params[:username])
+    if params[:login].blank? || params[:password].blank? || params[:admin].blank? || params[:username].blank?
+      flash[:danger] = "Fill all fields please"
+    else
+      dept_id = params[:departments].to_i if params[:departments].to_i == 0
+      User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin],
+                   :username => params[:username], :department_id => dept_id)
+    end
+
+    render nothing: true
+  end
+
+  def get_user
+    json = nil
+
+    user = User.where(id: params[:id].to_i).first
+    if user
+      json = Jbuilder.encode do |json|
+        json.id user.id
+        json.login user.login
+        json.username user.username
+        json.password user.password
+        json.department_id user.department_id
+        json.admin user.admin
+      end
+    else
+      flash[:danger] = 'User does not exists!'
+    end
+
+    render :text => json
+  end
+
+  def edit_user
+    user = User.where(id: params[:id]).first
+    if user
+      dept_id = params[:departments].to_i if params[:departments].to_i != 0
+      user.login = params[:login]
+      user.password = params[:password]
+      user.admin = params[:admin]
+      user.username = params[:username]
+      user.department_id = dept_id
+      user.save!
+    else
+      flash[:danger] = 'User does not exists!'
+    end
+
     render nothing: true
   end
 end

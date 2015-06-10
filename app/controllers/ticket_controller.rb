@@ -19,7 +19,7 @@ class TicketController < ApplicationController
       redirect_to ticket_path :reference => ticket.title
     else
       flash[:danger] = "Something went wrong!"
-      redirect_to root_path
+      redirect_to root_path and return
     end
   end
 
@@ -29,7 +29,7 @@ class TicketController < ApplicationController
       redirect_to ticket_path :reference => params[:ticket_reference]
     else
       flash[:danger] = "Ticket with given reference is not exists!"
-      redirect_to root_path
+      redirect_to root_path and return
     end
   end
 
@@ -54,7 +54,7 @@ class TicketController < ApplicationController
         redirect_to ticket_path :reference => params[:ticket_reference]
       else
         flash[:danger] = "Something went wrong! Ticket not found"
-        redirect_to root_path
+        redirect_to root_path and return
       end
     end
   end

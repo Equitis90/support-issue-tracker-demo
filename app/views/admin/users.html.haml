@@ -28,20 +28,21 @@
   = text_field_tag 'username', '', {:size => '30'}
   #department_label
   = label_tag 'Department:'
-  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 99%"
+  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 99%", :include_blank => true
   #admin_label
   = label_tag 'Admin:'
-  = check_box 'admin', ''
+  = check_box_tag 'admin'
   #password_label
     = label_tag 'password:'
   = text_field_tag 'password', '', {:size => '30'}
-  = hidden_field 'id', ''
 
 :javascript
     $(document).ready( function () {
       $.fn.dataTable.TableTools.defaults.aButtons = [ "div", "div" ];
 
       var table = $("#table_id").DataTable({
+        "aLengthMenu": [5, 10, 15],
+        "iDisplayLength": 5,
         "columnDefs": [
           {
               "targets": [0],
@@ -64,13 +65,19 @@
         }
       });
 
+      table.page(parseInt("#{params[:page] || 0}")).draw(false);
+
+      $('#ToolTables_table_id_1').addClass('DTTT_disabled');
+
       $('#table_id tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
+            $('#ToolTables_table_id_1').addClass('DTTT_disabled');
         }
         else {
             table.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
+            $('#ToolTables_table_id_1').removeClass('DTTT_disabled');
         }
       } );
 
@@ -85,20 +92,68 @@
             {
               text: "Create",
               click: function() {
+                var checked = $('#admin').prop('checked');
                 $.ajax({
                   method: 'POST',
                   url: "#{create_user_path}",
                   data: {login: $('#login').val(), username: $('#username').val(), departments: $('#departments').val(),
-                         password: $('#password').val(), admin: $('#admin').val()},
+                         password: $('#password').val(), admin: checked},
                   success: function() {
-                    $( this ).dialog( "close" );
-                    windows.location.href = "#{users_path}";
+                    $('#dialog' ).dialog( "close" );
+                    window.location.replace("#{users_path}" + '?page=' + table.page());
                   }
                 });
               }
             }
           ]
         });
-        //alert(table.row('.selected').data()[0]);
       } );
+
+      $('#ToolTables_table_id_1').click( function () {
+        if(!$('#ToolTables_table_id_1').hasClass('DTTT_disabled')) {
+          $.ajax({
+            method: 'get',
+            url: "#{get_user_path}",
+            data: {id: table.row('.selected').data()[0]},
+            success: function(json) {
+              var data = JSON.parse(json);
+              $('#login').val(data.login);
+              $('#username').val(data.username);
+              $('#departments').val(data.department_id);
+              $('#password').val(data.password);
+              if(data.admin == true) {
+                $('#admin').prop("checked", true);
+              } else {
+                $('#admin').prop("checked", false);
+              }
+              $('#dialog').dialog({
+                width: 370,
+                closeText: "",
+                modal: true,
+                resizable: false,
+                title: "Edit user",
+                buttons: [
+                  {
+                    text: "Save",
+                    click: function() {
+                      var checked = $('#admin').prop('checked');
+                      $.ajax({
+                        method: 'POST',
+                        url: "#{edit_user_path}",
+                        data: {id: data.id, login: $('#login').val(), username: $('#username').val(), departments: $('#departments').val(),
+                               password: $('#password').val(), admin: checked},
+                        success: function() {
+                          $('#dialog' ).dialog( "close" );
+                          window.location.replace("#{users_path}" + '?page=' + table.page());
+                        }
+                      });
+                    }
+                  }
+                ]
+              });
+            }
+          });
+        }
+      } );
+
     } );
