@@ -100,7 +100,7 @@ class AdminController < ApplicationController
       end
     else
       flash[:danger] = 'You do not have permission to visit this page!'
-      redirect_to tickets_path :page => params[:page] || 1 and return
+      redirect_to tickets_path and return
     end
   end
 
@@ -108,9 +108,17 @@ class AdminController < ApplicationController
     if params[:login].blank? || params[:password].blank? || params[:admin].blank? || params[:username].blank?
       flash[:danger] = "Fill all fields please"
     else
-      dept_id = params[:departments].to_i if params[:departments].to_i != 0
-      User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin],
-                   :username => params[:username], :department_id => dept_id)
+      begin
+      if User.where(:login => params[:login]).count == 0
+        dept_id = params[:departments].to_i if params[:departments].to_i != 0
+        User.create!(:login => params[:login], :password => params[:password], :admin => params[:admin],
+                     :username => params[:username], :department_id => dept_id)
+      else
+        flash[:danger] = 'User with given login allready exists!'
+      end
+      rescue Exception => e
+        flash[:danger] = e
+      end
     end
 
     render nothing: true
@@ -137,16 +145,20 @@ class AdminController < ApplicationController
   end
 
   def edit_user
-    user = User.where(id: params[:id]).first
+    user = User.where(id: params[:id].to_i).first
     if user
       begin
-        dept_id = params[:departments].to_i if params[:departments].to_i != 0
-        user.login = params[:login]
-        user.password = params[:password]
-        user.admin = params[:admin]
-        user.username = params[:username]
-        user.department_id = dept_id
-        user.save!
+        if User.where(:login => params[:login]).where.not(id: params[:id].to_i).count == 0
+          dept_id = params[:departments].to_i if params[:departments].to_i != 0
+          user.login = params[:login]
+          user.password = params[:password]
+          user.admin = params[:admin]
+          user.username = params[:username]
+          user.department_id = dept_id
+          user.save!
+        else
+          flash[:danger] = 'User with given login allready exists!'
+        end
       rescue Exception => e
         flash[:danger] = e
       end
@@ -173,6 +185,184 @@ class AdminController < ApplicationController
       end
     else
       flash[:danger] = 'User does not exists!'
+    end
+
+    render nothing: true
+  end
+
+  def departments
+    user = User.where(id: session[:user]).first
+    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    if user && user.admin
+      @departments = []
+      Department.all.each do |dep|
+        @departments << {id: dep.id, title: dep.title}
+      end
+    else
+      flash[:danger] = 'You do not have permission to visit this page!'
+      redirect_to tickets_path and return
+    end
+  end
+
+  def create_department
+    if params[:title].blank?
+      flash[:danger] = "Fill title field please"
+    else
+      begin
+        if Department.where(:title => params[:title]).count == 0
+          Department.create!(:title => params[:title])
+        else
+          flash[:danger] = "Department with given title allready exists!"
+        end
+      rescue Exception => e
+        flash[:danger] = e
+      end
+    end
+
+    render nothing: true
+  end
+
+  def get_department
+    json = nil
+
+    department = Department.where(id: params[:id].to_i).first
+    if department
+      json = Jbuilder.encode do |json|
+        json.id department.id
+        json.title department.title
+      end
+    else
+      flash[:danger] = 'Department does not exists!'
+    end
+
+    render :text => json
+  end
+
+  def edit_department
+    department = Department.where(id: params[:id].to_i).first
+    if department
+      begin
+        if Department.where(:title => params[:title]).where.not(id: params[:id].to_i).count == 0
+          department.title = params[:title]
+          department.save!
+        else
+          flash[:danger] = "Department with given title allready exists!"
+        end
+      rescue Exception => e
+        flash[:danger] = e
+      end
+    else
+      flash[:danger] = 'Department does not exists!'
+    end
+
+    render nothing: true
+  end
+
+  def delete_department
+    department = Department.where(id: params[:id].to_i).first
+    if department
+      user = User.where(department_id: department.id).first
+      if user
+        flash[:danger] = 'Department can not be deleted it has users!'
+      else
+        begin
+          department.destroy!
+          flash[:success] = 'Department deleted!'
+        rescue Exception => e
+          flash[:danger] = e
+        end
+      end
+    else
+      flash[:danger] = 'Department does not exists!'
+    end
+
+    render nothing: true
+  end
+
+  def ticket_statuses
+    user = User.where(id: session[:user]).first
+    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    if user && user.admin
+      @ticket_statuses = []
+      TicketStatus.all.each do |t_s|
+        @ticket_statuses << {id: t_s.id, title: t_s.title}
+      end
+    else
+      flash[:danger] = 'You do not have permission to visit this page!'
+      redirect_to tickets_path :page => params[:page] || 1 and return
+    end
+  end
+
+  def create_ticket_status
+    if params[:title].blank?
+      flash[:danger] = "Fill title field please"
+    else
+      begin
+        if TicketStatus.where(:title => params[:title]).count == 0
+          TicketStatus.create!(:title => params[:title])
+        else
+          flash[:danger] = "Ticket status with given title allready exists!"
+        end
+      rescue Exception => e
+        flash[:danger] = e
+      end
+    end
+
+    render nothing: true
+  end
+
+  def get_ticket_status
+    json = nil
+
+    ticket_status = TicketStatus.where(id: params[:id].to_i).first
+    if ticket_status
+      json = Jbuilder.encode do |json|
+        json.id ticket_status.id
+        json.title ticket_status.title
+      end
+    else
+      flash[:danger] = 'Ticket status does not exists!'
+    end
+
+    render :text => json
+  end
+
+  def edit_ticket_status
+    ticket_status = TicketStatus.where(id: params[:id].to_i).first
+    if ticket_status
+      begin
+        if TicketStatus.where(:title => params[:title]).where.not(id: params[:id].to_i).count == 0
+          ticket_status.title = params[:title]
+          ticket_status.save!
+        else
+          flash[:danger] = "Ticket status with given title allready exists!"
+        end
+      rescue Exception => e
+        flash[:danger] = e
+      end
+    else
+      flash[:danger] = 'Ticket status does not exists!'
+    end
+
+    render nothing: true
+  end
+
+  def delete_ticket_status
+    ticket_status = TicketStatus.where(id: params[:id].to_i).first
+    if ticket_status
+      ticket = Ticket.where(ticket_status_id: ticket_status.id).first
+      if ticket
+        flash[:danger] = 'Ticket status can not be deleted, tickets with this status exists!'
+      else
+        begin
+          ticket_status.destroy!
+          flash[:success] = 'Ticket status deleted!'
+        rescue Exception => e
+          flash[:danger] = e
+        end
+      end
+    else
+      flash[:danger] = 'Ticket status does not exists!'
     end
 
     render nothing: true

@@ -1,0 +1,6 @@
+%html
+  %head
+    %meta{:content => 'text/html; charset=UTF-8', "http-equiv" => 'Content-Type'}
+  %body
+    %h1= "Hi #{@customer}"
+    %p= "Ticket has been changed. Visit it #{ link_to @reference, ticket_url(:reference => @reference) }".html_safe

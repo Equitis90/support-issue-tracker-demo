@@ -1,44 +1,27 @@
 %div{:class => 'well centered'}
-  %h1 Users
+  %h1 Ticket Statuses
   %br
   #table{:style => 'border-radius: 25px; padding: 20px; background: #B8E6B8;'}
     %table{:id => "table_id", :class => "display"}
       %thead
         %tr
           %th ID
-          %th User name
-          %th Login
-          %th Department
-          %th Admin
+          %th Ticket status
       %tbody
-        -@users.each do |user|
+        -@ticket_statuses.each do |t_s|
           %tr
-            %td= user[:id]
-            %td= user[:username]
-            %td= user[:login]
-            %td= user[:department]
-            %td= user[:admin]
+            %td= t_s[:id]
+            %td= t_s[:title]
 
 #dialog{:style => 'display: none; text-align: center'}
-  #login_label
-  = label_tag 'Login:'
+  #title_label
+  = label_tag 'Title:'
   %br
-  = text_field_tag 'login', '', {:size => '30'}
-  #username_label
-  = label_tag 'User name:'
-  = text_field_tag 'username', '', {:size => '30'}
-  #department_label
-  = label_tag 'Department:'
-  = select_tag 'departments', options_for_select(@departments, 0), :style => "width: 80%", :include_blank => true
-  #admin_label
-  = label_tag 'Admin:'
-  = check_box_tag 'admin'
-  #password_label
-    = label_tag 'password:'
-  = text_field_tag 'password', '', {:size => '30'}
+  = text_field_tag 'title', '', {:size => '30'}
+
 
 #confirm{:style => 'display: none; text-align: center'}
-  #message Delete user?
+  #message Delete ticket status?
 #error{:style => 'display: none; text-align: center'}
   #message
 
@@ -61,15 +44,15 @@
             "aButtons": [
                 {
                     "sExtends":    "div",
-                    "sButtonText": "New user"
+                    "sButtonText": "New ticket status"
                 },
                 {
                     "sExtends":    "div",
-                    "sButtonText": "Edit user"
+                    "sButtonText": "Edit ticket status"
                 },
                 {
                     "sExtends":    "div",
-                    "sButtonText": "Delete user"
+                    "sButtonText": "Delete ticket status"
                 }
             ]
         }
@@ -100,20 +83,18 @@
           closeText: "",
           modal: true,
           resizable: false,
-          title: "New user",
+          title: "New ticket status",
           buttons: [
             {
               text: "Create",
               click: function() {
-                var checked = $('#admin').prop('checked');
                 $.ajax({
                   method: 'POST',
-                  url: "#{create_user_path}",
-                  data: {login: $('#login').val(), username: $('#username').val(), departments: $('#departments').val(),
-                         password: $('#password').val(), admin: checked},
+                  url: "#{create_ticket_status_path}",
+                  data: {title: $('#title').val()},
                   success: function() {
                     $('#dialog' ).dialog( "close" );
-                    window.location.replace("#{users_path}" + '?page=' + table.page());
+                    window.location.replace("#{ticket_statuses_path}" + '?page=' + table.page());
                   }
                 });
               }
@@ -132,38 +113,28 @@
         if(!$('#ToolTables_table_id_1').hasClass('DTTT_disabled')) {
           $.ajax({
             method: 'get',
-            url: "#{get_user_path}",
+            url: "#{get_ticket_status_path}",
             data: {id: table.row('.selected').data()[0]},
             success: function(json) {
               var data = JSON.parse(json);
-              $('#login').val(data.login);
-              $('#username').val(data.username);
-              $('#departments').val(data.department_id);
-              $('#password').val(data.password);
-              if(data.admin == true) {
-                $('#admin').prop("checked", true);
-              } else {
-                $('#admin').prop("checked", false);
-              }
+              $('#title').val(data.title);
               $('#dialog').dialog({
                 width: 370,
                 closeText: "",
                 modal: true,
                 resizable: false,
-                title: "Edit user",
+                title: "Edit ticket status",
                 buttons: [
                   {
                     text: "Save",
                     click: function() {
-                      var checked = $('#admin').prop('checked');
                       $.ajax({
                         method: 'POST',
-                        url: "#{edit_user_path}",
-                        data: {id: data.id, login: $('#login').val(), username: $('#username').val(), departments: $('#departments').val(),
-                               password: $('#password').val(), admin: checked},
+                        url: "#{edit_ticket_status_path}",
+                        data: {id: data.id, title: $('#title').val()},
                         success: function() {
                           $('#dialog' ).dialog( "close" );
-                          window.location.replace("#{users_path}" + '?page=' + table.page());
+                          window.location.replace("#{ticket_statuses_path}" + '?page=' + table.page());
                         }
                       });
                     }
@@ -196,10 +167,10 @@
                 $('#confirm' ).dialog( "close" );
                 $.ajax({
                   method: 'post',
-                  url: "#{delete_user_path}",
+                  url: "#{delete_ticket_status_path}",
                   data: {id: table.row('.selected').data()[0]},
                   success: function() {
-                    window.location.replace("#{users_path}" + '?page=' + table.page());
+                    window.location.replace("#{ticket_statuses_path}" + '?page=' + table.page());
                   }
                 });
               }

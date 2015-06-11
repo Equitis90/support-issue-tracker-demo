@@ -39,6 +39,10 @@ class TicketController < ApplicationController
       @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     end
     @ticket = Ticket.joins(:ticket_messages).where(title: params[:reference]).first
+    @statuses = []
+    TicketStatus.all.each do |t_s|
+      @statuses << [t_s.title, t_s.id]
+    end
   end
 
   def ticket_add_message_post
@@ -48,10 +52,42 @@ class TicketController < ApplicationController
     else
       ticket = Ticket.where(title: params[:ticket_reference]).first
       if ticket
-        message = TicketMessage.new(text: params[:ticket_message], ticket_id: ticket.id)
-        message.user_id = session[:user].to_i if session[:user] && session[:user].to_i != 0
-        message.save!
-        redirect_to ticket_path :reference => params[:ticket_reference]
+        if session[:user]
+          if params[:ticket_status].to_i != 0
+            begin
+              ticket.ticket_status_id = params[:ticket_status].to_i
+              ticket.save!
+              CustomerMailSender.ticket_change_mail(ticket.creator_name, ticket.creator_email, ticket.title).deliver
+            rescue Exception => e
+              flash[:danger] = e
+              redirect_to ticket_path :reference => params[:ticket_reference] and return
+            end
+          else
+            flash[:danger] = "Something went wrong! Message does not saved!"
+            redirect_to ticket_path :reference => params[:ticket_reference] and return
+          end
+        else
+          begin
+            wait_for_staff_status = TicketStatus.where(title: 'Waiting for Staff Response').first.try(:id)
+            wait_for_customer_status = TicketStatus.where(title: 'Waiting for Customer').first.try(:id)
+            if ticket.ticket_status_id == wait_for_customer_status
+              ticket.ticket_status_id = wait_for_staff_status
+              ticket.save!
+            end
+          rescue Exception => e
+            flash[:danger] = e
+            redirect_to ticket_path :reference => params[:ticket_reference] and return
+          end
+        end
+        begin
+          message = TicketMessage.new(text: params[:ticket_message], ticket_id: ticket.id)
+          message.user_id = session[:user].to_i if session[:user] && session[:user].to_i != 0
+          message.save!
+        rescue Exception => e
+          flash[:danger] = e
+          redirect_to ticket_path :reference => params[:ticket_reference] and return
+        end
+        redirect_to ticket_path :reference => params[:ticket_reference] and return
       else
         flash[:danger] = "Something went wrong! Ticket not found"
         redirect_to root_path and return

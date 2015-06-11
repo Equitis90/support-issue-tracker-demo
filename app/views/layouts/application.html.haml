@@ -21,6 +21,10 @@
             - if @user[:admin]
               %li
                 %a{:href => users_path, :style => "color: black"} Users
+              %li
+                %a{:href => departments_path, :style => "color: black"} Departments
+              %li
+                %a{:href => ticket_statuses_path, :style => "color: black"} Ticket Statuses
           =form_tag log_out_post_path, :class => "navbar-form navbar-right", :method => :post do
             = submit_tag 'Log out', :class => "btn btn-info"
     - unless flash.empty?
