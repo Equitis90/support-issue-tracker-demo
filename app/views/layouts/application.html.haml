@@ -9,7 +9,7 @@
   %body
     %nav{:class => 'navbar navbar-default', :style => 'background: #33AD33;'}
       .container-fluid
-        %a{:class => "navbar-brand", :style => 'color: brown;', :href => root_path, :title => 'To start page.'} Support Issue Tracking
+        %a{:class => "navbar-brand", :style => 'color: #993300;', :href => root_path, :title => 'To start page.'} Support Issue Tracking
         =form_tag search_ticket_path, :class => "navbar-form navbar-right", :role => "search" , :method => :get do
           .form-group
             = text_field_tag 'ticket_reference', '',{:placeholder => 'Type ticket reference here...', :size => "23"}
@@ -20,11 +20,11 @@
               %a{:href => tickets_path}= @user[:username]
             - if @user[:admin]
               %li
-                %a{:href => users_path, :style => "color: black"} Users
+                %a{:href => users_path, :style => "color: #003366"} Users
               %li
-                %a{:href => departments_path, :style => "color: black"} Departments
+                %a{:href => departments_path, :style => "color: #003366"} Departments
               %li
-                %a{:href => ticket_statuses_path, :style => "color: black"} Ticket Statuses
+                %a{:href => ticket_statuses_path, :style => "color: #003366"} Ticket Statuses
           =form_tag log_out_post_path, :class => "navbar-form navbar-right", :method => :post do
             = submit_tag 'Log out', :class => "btn btn-info"
     - unless flash.empty?
@@ -34,3 +34,5 @@
           = content_tag :div, value, :id => "flash_#{key}", :style => "text-align:center"
         %br
     = yield
+    #footer{:class => "navbar navbar-default navbar-fixed-bottom", :style => 'background: #33AD33;'}
+      %p{:class => 'navbar-text navbar-right', :style => 'margin-right: 20px; color: #003366'}= "Created by <a href='https://github.com/Equitis90' class='navbar-link' style='color:#003366'> Equitis</a>".html_safe
