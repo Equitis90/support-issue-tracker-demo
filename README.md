@@ -21,15 +21,19 @@ Install ruby (2.1.1 [here](http://rubyinstaller.org/downloads/ "http://rubyinsta
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. 
 You need to create database and role with this parameters, or create custom database and role and set its parameters to ``  config/database.yml `` project file, in development and production sections. 
 
-  Install bundler gem:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Install bundler gem:  
   `` gem install bundler ``
 
-  Install gems:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Install gems:  
   `` bundle install ``
 
-  Run migrations:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run migrations:  
   `` rake db:migrate ``  
   `` rake db:seed ``  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:  
+`` rails server -b 127.0.0.1 -p 3000 -e production  ``  
+You can also type development instead of production. Or if you use RubyMine start app from it by running one of configurations: development of production.
   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In `` config/environments/development.rb `` and `` config/environments/production.rb `` files, you need to specify gmail accout and use it as smtp server. Settings can be found in block:  
 `` config.action_mailer.smtp_settings = { ``  
