@@ -30,9 +30,6 @@ You need to create database and role with this parameters, or create custom data
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run migrations:  
   `` rake db:migrate ``  
   `` rake db:seed ``  
-  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:  
-`` rails server -b 127.0.0.1 -p 3000 -e production  ``  
 
 You can also type development instead of production. Or if you use RubyMine start app from it by running one of configurations: development of production.
   
@@ -46,7 +43,10 @@ You can also type development instead of production. Or if you use RubyMine star
 ``        :authentication       => "plain",  ``  
 ``        :enable_starttls_auto => true  ``  
 ``    }   ``  
-  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:  
+`` rails server -b 127.0.0.1 -p 3000 -e production  ``  
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;App can be accessed on link: http://127.0.0.1:3000
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Admin section locates on this link: http://127.0.0.1:3000/admin
