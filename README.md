@@ -13,25 +13,25 @@ Staff interface
 
 ## Setting up app #
 
-Project can be opened in RubyMine IDE. 
-Install ruby (2.1.1 [here](http://rubyinstaller.org/downloads/ 'http://rubyinstaller.org/downloads/'), and DevKit from the same page [installation notes](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit 'https://github.com/oneclick/rubyinstaller/wiki/Development-Kit')), and Postgresql (can be downloaded from [here](http://www.postgresql.org/download/ "http://www.postgresql.org/download/")).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Project can be opened in RubyMine IDE. 
+Install ruby (2.1.1 [here](http://rubyinstaller.org/downloads/ "http://rubyinstaller.org/downloads/"), and DevKit from the same page [installation notes](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit "https://github.com/oneclick/rubyinstaller/wiki/Development-Kit")), and Postgresql (can be downloaded from [here](http://www.postgresql.org/download/ "http://www.postgresql.org/download/")).
 
-First of all you need to setup postgres database. Instructions can be found [here] (http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html, 'http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html').
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First of all you need to setup postgres database. Instructions can be found [here] (http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html, 'http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html').
 
-By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. 
 You need to create database and role with this parameters, or create custom database and role and set its parameters to ``  config/database.yml `` project file, in development and production sections. 
 
-Install bundler gem:  
+  Install bundler gem:  
   `` gem install bundler ``
 
-Install gems:  
+  Install gems:  
   `` bundle install ``
 
-Run migrations:  
+  Run migrations:  
   `` rake db:migrate ``  
   `` rake db:seed ``  
   
-In `` config/environments/development.rb `` and `` config/environments/production.rb `` files, you need to specify gmail accout and use it as smtp server. Settings can be found in block:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In `` config/environments/development.rb `` and `` config/environments/production.rb `` files, you need to specify gmail accout and use it as smtp server. Settings can be found in block:  
 `` config.action_mailer.smtp_settings = { ``  
 ``        :address              => "smtp.gmail.com", ``  
 ``        :port                 => 587,  ``  
@@ -42,13 +42,13 @@ In `` config/environments/development.rb `` and `` config/environments/productio
 ``        :enable_starttls_auto => true  ``  
 ``    }   ``  
   
-App can be accessed on link: http://127.0.0.1:3000
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;App can be accessed on link: http://127.0.0.1:3000
 
-Admin section locates on this link: http://127.0.0.1:3000/admin
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Admin section locates on this link: http://127.0.0.1:3000/admin
 
-Login: `` admin ``  
-Password: `` 123 ``
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login: `` admin ``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password: `` 123 ``
 
-In this section you can add or change created users, tickets, ticket statuses and departments, and response to the tickets.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In this section you can add or change created users, tickets, ticket statuses and departments, and response to the tickets.
 
-Also you can create new tickets as customer on main page.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Also you can create new tickets as customer on main page.
