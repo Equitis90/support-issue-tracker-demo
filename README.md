@@ -44,7 +44,8 @@ You can also type development instead of production. Or if you use RubyMine star
 ``        :enable_starttls_auto => true  ``  
 ``    }   ``  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:
+
 `` rails server -b 127.0.0.1 -p 3000 -e production  ``  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;App can be accessed on link: http://127.0.0.1:3000
