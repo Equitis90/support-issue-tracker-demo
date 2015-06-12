@@ -8,7 +8,7 @@
   %div{:style => 'width: 100%; text-align: left; display:inline-block; vertical-align:middle;'}
     = label_tag 'Ticket department:', nil, :style => 'float: left;'
     %div{:style => 'color:brown; font-size: 110%;'}= Department.where(id: @ticket.department_id).first.try(:title)
-  %div{:style => 'display:inline-block; height:100%; vertical-align:middle;'}
+  %div{:style => 'display:inline-block; height:100%; vertical-align:middle; overflow-y: scroll; height:175px;'}
     - @ticket.ticket_messages.order('created_at asc').each do |message|
       %div{:style => 'text-align: left; border-radius: 15px 15px 15px; padding: 5px; margin-bottom: 5px; background: lightgreen;'}
         = label_tag 'Creator:'
