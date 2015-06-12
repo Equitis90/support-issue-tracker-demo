@@ -33,6 +33,7 @@ You need to create database and role with this parameters, or create custom data
   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To start application go to `` /bin `` in project directory and type in console:  
 `` rails server -b 127.0.0.1 -p 3000 -e production  ``  
+
 You can also type development instead of production. Or if you use RubyMine start app from it by running one of configurations: development of production.
   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In `` config/environments/development.rb `` and `` config/environments/production.rb `` files, you need to specify gmail accout and use it as smtp server. Settings can be found in block:  
