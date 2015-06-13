@@ -29,13 +29,12 @@
     #container{:style => 'width: 100%'}
       = label_tag 'Type answer here:', nil, :style=> 'width: 45%; float: left;'
       - if session[:user]
-        = select_tag 'ticket_status', options_for_select(@statuses, @ticket.ticket_status_id), :style=> 'width: 20%; float: right; margin-top: -4px;'
-        = label_tag 'Set status:', nil, :style=> 'width: 8%; float: right;'
+        = select_tag 'ticket_status', options_for_select(@statuses, @ticket.ticket_status_id), :style=> 'width: 20%; float: right;'
+        = label_tag 'Set status:', nil, :style=> 'width: 15%; float: right; text-align: right;'
     #center{:style => 'text-align: center'}
       = text_area_tag 'ticket_message', '', :size => '115x4', :style => 'float: center'
-    %br
     = text_field_tag 'ticket_reference', @ticket.title , {:hidden => true}
-    = submit_tag 'Add answer', :class => 'btn btn-success', data: {:disable_with => '...'}
+    = submit_tag 'Add answer', :class => 'btn btn-success', data: {:disable_with => '...'}, :style => 'margin-top: 3px;'
 
 :javascript
   $( document ).ready(function() {
