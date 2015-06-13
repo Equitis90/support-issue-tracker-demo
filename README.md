@@ -16,7 +16,8 @@ Staff interface
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Project can be opened in RubyMine IDE. 
 Install ruby (2.1.1 [here](http://rubyinstaller.org/downloads/ "http://rubyinstaller.org/downloads/"), and DevKit from the same page [installation notes](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit "https://github.com/oneclick/rubyinstaller/wiki/Development-Kit")), and Postgresql (can be downloaded from [here](http://www.postgresql.org/download/ "http://www.postgresql.org/download/")).
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First of all you need to setup postgres database. Instructions can be found [here] (http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html, 'http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html').
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First of all you need to setup postgres database. Instructions can be found 
+[here](http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html 'http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html').
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. 
 You need to create database and role with this parameters, or create custom database and role and set its parameters to ``  config/database.yml `` project file, in development and production sections. 
