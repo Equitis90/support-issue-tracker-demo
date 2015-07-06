@@ -5,9 +5,13 @@
     %div{:style => 'color:brown; font-size: 110%; float: left; width: 45%; text-align: left;'}= @ticket.creator_name
     %div{:style => 'color:brown; font-size: 110%; float: right;'}= TicketStatus.where(id:@ticket.ticket_status_id).first.try(:title)
     = label_tag 'Ticket status:', nil, :style=> 'float: right; width: 20%; text-align: right;'
-  %div{:style => 'width: 100%; text-align: left; display:inline-block; vertical-align:middle;'}
+  %div{:style => 'width: 100%; text-align: left; display:inline-block;'}
     = label_tag 'Ticket department:', nil, :style => 'float: left;'
-    %div{:style => 'color:brown; font-size: 110%;'}= Department.where(id: @ticket.department_id).first.try(:title)
+    %div{:style => 'color:brown; font-size: 110%; width: 50%; float: left;'}= Department.where(id: @ticket.department_id).first.try(:title)
+    - if session[:user] && @ticket.user_id.nil?
+      = button_to "Get ownership", {:controller => :ticket, :action => 'get_ownership', :ticket_id => @ticket.id,
+                                    :user_id => session[:user], :ticket_reference => @ticket.title},
+                                    :class => 'btn btn-warning', :style => 'float: right'
   %div{:style => 'display:inline-block; height:100%; vertical-align:middle; overflow-y: scroll; height:175px;'}
     - @ticket.ticket_messages.order('created_at asc').each do |message|
       %div{:style => 'text-align: left; border-radius: 15px 15px 15px; padding: 5px; margin-bottom: 5px; background: lightgreen;'}
@@ -24,17 +28,18 @@
         #right{:style => 'text-align: right; margin-right: 10px'}
           %button{:class => 'quote btn btn-warning', :id => "#{message.id}"} Quote
 %br
-#new_message{:class => 'well centered', :style => "text-align: left ; margin: auto; background: #{session[:user].nil? ? '#A3FFD1' : '#ADD633'};"}
-  = form_tag ticket_add_message_post_path, :method => :post do
-    #container{:style => 'width: 100%'}
-      = label_tag 'Type answer here:', nil, :style=> 'width: 45%; float: left;'
-      - if session[:user]
-        = select_tag 'ticket_status', options_for_select(@statuses, @ticket.ticket_status_id), :style=> 'width: 20%; float: right;'
-        = label_tag 'Set status:', nil, :style=> 'width: 15%; float: right; text-align: right;'
-    #center{:style => 'text-align: center'}
-      = text_area_tag 'ticket_message', '', :size => '115x4', :style => 'float: center'
-    = text_field_tag 'ticket_reference', @ticket.title , {:hidden => true}
-    = submit_tag 'Add answer', :class => 'btn btn-success', data: {:disable_with => '...'}, :style => 'margin-top: 3px;'
+- if (session[:user] && @ticket.user_id == @user[:id]) || session[:user].nil?
+  #new_message{:class => 'well centered', :style => "text-align: left ; margin: auto; background: #{session[:user].nil? ? '#A3FFD1' : '#ADD633'};"}
+    = form_tag ticket_add_message_post_path, :method => :post do
+      #container{:style => 'width: 100%'}
+        = label_tag 'Type answer here:', nil, :style=> 'width: 45%; float: left;'
+        - if session[:user]
+          = select_tag 'ticket_status', options_for_select(@statuses, @ticket.ticket_status_id), :style=> 'width: 20%; float: right;'
+          = label_tag 'Set status:', nil, :style=> 'width: 15%; float: right; text-align: right;'
+      #center{:style => 'text-align: center'}
+        = text_area_tag 'ticket_message', '', :size => '115x4', :style => 'float: center'
+      = text_field_tag 'ticket_reference', @ticket.title , {:hidden => true}
+      = submit_tag 'Add answer', :class => 'btn btn-success', data: {:disable_with => '...'}, :style => 'margin-top: 3px;'
 
 :javascript
   $( document ).ready(function() {

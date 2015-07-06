@@ -29,4 +29,5 @@ Rails.application.routes.draw do
   get "get_ticket_status" => "admin#get_ticket_status"
   post "edit_ticket_status" => "admin#edit_ticket_status"
   post "delete_ticket_status" => "admin#delete_ticket_status"
+  post "get_ownership" => "ticket#get_ownership"
 end

@@ -55,24 +55,24 @@ class AdminController < ApplicationController
     tickets = Ticket.joins(:department, :ticket_status)
     if user.department_id
       if status_id
-        tickets.where(department_id: user.department_id, ticket_status_id: status_id).each do |ticket|
+        tickets.where(department_id: user.department_id, ticket_status_id: status_id, user_id: user.id).each do |ticket|
           @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                        creator_name: ticket.creator_name, creator_email: ticket.creator_email}
         end
       else
-        tickets.where(department_id: user.department_id).each do |ticket|
+        tickets.where(department_id: user.department_id, user_id: nil).each do |ticket|
           @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                        creator_name: ticket.creator_name, creator_email: ticket.creator_email}
         end
       end
     else
       if status_id
-        Ticket.joins(:department, :ticket_status).where(ticket_status_id: status_id).each do |ticket|
+        tickets.where(ticket_status_id: status_id, user_id: user.id).each do |ticket|
           @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                        creator_name: ticket.creator_name, creator_email: ticket.creator_email}
         end
       else
-        Ticket.joins(:department, :ticket_status).all.each do |ticket|
+        tickets.where(user_id: nil).each do |ticket|
           @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
                        creator_name: ticket.creator_name, creator_email: ticket.creator_email}
         end

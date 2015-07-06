@@ -99,4 +99,19 @@ class TicketController < ApplicationController
       end
     end
   end
+
+  def get_ownership
+    ticket = Ticket.where(id: params[:ticket_id]).first
+    if ticket
+      begin
+        ticket.user_id = params[:user_id].to_i
+        ticket.skip_callbacks = true
+        ticket.save!
+      rescue Exception => e
+        flash[:danger] = e
+        redirect_to tickets_path and return
+      end
+    end
+    redirect_to ticket_path :reference => params[:ticket_reference] and return
+  end
 end
