@@ -7,6 +7,7 @@
 
 Staff interface
 * Each member of staff have a username and password to login to the system. Staff can view a list of all tickets from their department. Staff able to reply to the ticket by simply entering their response into a text field and setting new status for the ticket. All changes to the status tracked with each staff reply. All changes e-mailed to the client.
+*  Staff can view a list of all unassigned, open tickets and take ownership.
 * Each ticket can be assigned a status - ʻWaiting for Staff Responseʼ, ʻWaiting for Customerʼ, ʻOn Holdʼ, ʻCancelledʼ or ʻCompletedʼ - further status may wish to be added in the future.
 * When a ticket is first created or updated by the customer, it assigned the ʻWaiting for Staff Responseʼ status.
 * Staff able to quickly open up a new ticket by entering itʼs reference number into a search field.
