@@ -28,7 +28,7 @@
         #right{:style => 'text-align: right; margin-right: 10px'}
           %button{:class => 'quote btn btn-warning', :id => "#{message.id}"} Quote
 %br
-- if (session[:user] && @ticket.user_id == @user[:id]) || session[:user].nil?
+- if (session[:user] && @ticket.user_id == User.current.id) || session[:user].nil?
   #new_message{:class => 'well centered', :style => "text-align: left ; margin: auto; background: #{session[:user].nil? ? '#A3FFD1' : '#ADD633'};"}
     = form_tag ticket_add_message_post_path, :method => :post do
       #container{:style => 'width: 100%'}

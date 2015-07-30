@@ -14,11 +14,11 @@
           .form-group
             = text_field_tag 'ticket_reference', '',{:placeholder => 'Type ticket reference here...', :size => "23"}
           = submit_tag 'Search', :class => "btn btn-primary"
-        - if session[:user]
+        - if User.current
           %ul{:class => "nav navbar-nav"}
             %li{:class => "active"}
-              %a{:href => tickets_path}= @user[:username]
-            - if @user[:admin]
+              %a{:href => tickets_path}= User.current.username
+            - if User.current.admin
               %li
                 %a{:href => users_path, :style => "color: #003366"} Users
               %li

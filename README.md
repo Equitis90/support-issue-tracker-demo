@@ -3,11 +3,11 @@
 ## Support issue tracker demo app ##
 
 * Customers do not need to login to create a issue ticket. To create a ticket they need to specify their name, email, department and discribe issue.
-* Each new ticket is assigned a unique reference in the format similar to ABC-123456. - When a new ticket is added, the customer receives an email confirming their request has been received along with their unique reference. 
+* Each new ticket is assigned a unique reference in the format similar to ABC-4F-ABC-8D-ABC (where: ABC is random 3-char string, 4F, 8D are random hex numbers). - When a new ticket is added, the customer receives an email confirming their request has been received along with their unique reference.
 
 Staff interface
 * Each member of staff have a username and password to login to the system. Staff can view a list of all tickets from their department. Staff able to reply to the ticket by simply entering their response into a text field and setting new status for the ticket. All changes to the status tracked with each staff reply. All changes e-mailed to the client.
-*  Staff can view a list of all unassigned, open tickets and take ownership.
+* Staff can view a list of all unassigned, open tickets and take ownership.
 * Each ticket can be assigned a status - ʻWaiting for Staff Responseʼ, ʻWaiting for Customerʼ, ʻOn Holdʼ, ʻCancelledʼ or ʻCompletedʼ - further status may wish to be added in the future.
 * When a ticket is first created or updated by the customer, it assigned the ʻWaiting for Staff Responseʼ status.
 * Staff able to quickly open up a new ticket by entering itʼs reference number into a search field.
@@ -20,7 +20,7 @@ Install ruby (2.1.6 [here](http://rubyinstaller.org/downloads/ "http://rubyinsta
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First of all you need to setup postgres database. Instructions can be found 
 [here](http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html 'http://www.postgresql.org/docs/9.4/static/sql-createdatabase.html').
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By default database name is `` sit ``, role name is `` vlad ``, and its password `` 123 ``. To run tests you also need to create database ``sit_test``.
 You need to create database and role with this parameters, or create custom database and role and set its parameters to ``  config/database.yml `` project file, in development and production sections. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Install bundler gem:  

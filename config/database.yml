@@ -30,7 +30,6 @@ development:
   username: vlad
   password: '123'
   host: 127.0.0.1
-  #host: 91.198.83.234
   insert_returning: false
 
   # The specified database role being used to connect to postgres.
@@ -64,9 +63,14 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: support_iIssue_tracking_test
+  adapter: postgresql
+  encoding: utf-8
+  database: sit_test
+  pool: 50
+  username: vlad
+  password: '123'
   host: 127.0.0.1
+  insert_returning: false
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

@@ -1,22 +1,33 @@
 class AdminController < ApplicationController
   before_filter :check_for_user, :except => [:admin, :log_in_post]
   def check_for_user
-    unless session[:user]
-      flash[:danger] = 'Administrative area please log in!'
-      redirect_to admin_path and return
+    unless User.current
+      if session[:user_id]
+        user = User.where(:id => session[:user_id]).first
+        if user
+          User.current = user
+        else
+          flash[:danger] = 'Administrative area please log in!'
+          redirect_to admin_path and return
+        end
+      else
+        flash[:danger] = 'Administrative area please log in!'
+        redirect_to admin_path and return
+      end
     end
   end
 
   def admin
-    if session[:user]
+    if User.current
       redirect_to tickets_path and return
     end
   end
 
   def tickets
     @tickets = []
-    user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    user = User.current
+    #user = User.where(id: session[:user]).first
+    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user.department_id
       Ticket.joins(:department, :ticket_status).where(department_id: user.department_id).each do |ticket|
         @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
@@ -33,6 +44,7 @@ class AdminController < ApplicationController
   def log_in_post
     user = User.where(login: params[:login], encrypted_password: User.encrypt_password(params[:password])).first
     if user
+      User.current = user
       session[:user] = user.id
       redirect_to tickets_path and return
     else
@@ -42,6 +54,7 @@ class AdminController < ApplicationController
   end
 
   def log_out_post
+    User.current = nil
     session[:user] = nil
     redirect_to root_path and return
   end
@@ -50,31 +63,52 @@ class AdminController < ApplicationController
     status_id = params[:id].to_i if params[:id] && params[:id].to_i != 0
     @status_id = status_id
     @tickets = []
-    user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    user = User.current
+    #user = User.where(id: session[:user]).first
+    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     tickets = Ticket.joins(:department, :ticket_status)
     if user.department_id
       if status_id
         tickets.where(department_id: user.department_id, ticket_status_id: status_id, user_id: user.id).each do |ticket|
-          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+          @tickets << {id: ticket.id,
+                       reference: ticket.title,
+                       department: ticket.department.title,
+                       status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name,
+                       creator_email: ticket.creator_email
+          }
         end
       else
         tickets.where(department_id: user.department_id, user_id: nil).each do |ticket|
-          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+          @tickets << {id: ticket.id,
+                       reference: ticket.title,
+                       department: ticket.department.title,
+                       status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name,
+                       creator_email: ticket.creator_email
+          }
         end
       end
     else
       if status_id
         tickets.where(ticket_status_id: status_id, user_id: user.id).each do |ticket|
-          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+          @tickets << {id: ticket.id,
+                       reference: ticket.title,
+                       department: ticket.department.title,
+                       status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name,
+                       creator_email: ticket.creator_email
+          }
         end
       else
         tickets.where(user_id: nil).each do |ticket|
-          @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                       creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+          @tickets << {id: ticket.id,
+                       reference: ticket.title,
+                       department: ticket.department.title,
+                       status: ticket.ticket_status.title,
+                       creator_name: ticket.creator_name,
+                       creator_email: ticket.creator_email
+          }
         end
       end
     end
@@ -86,8 +120,9 @@ class AdminController < ApplicationController
     Department.all.each do |dep|
       @departments << [dep.title, dep.id]
     end
-    user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    user = User.current
+    #user = User.where(id: session[:user]).first
+    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @users = []
       departments = {}
@@ -96,7 +131,8 @@ class AdminController < ApplicationController
       end
       User.where("login != 'admin' and username != 'admin'").each do |user|
         @users << {id: user.id, username: user.username, login: user.login, admin: user.admin ? 'Yes' : 'No',
-                   department: user.department_id.nil? ? 'Without department' : departments[user.department_id]}
+                   department: user.department_id.nil? ? 'Without department' : departments[user.department_id]
+        }
       end
     else
       flash[:danger] = 'You do not have permission to visit this page!'
@@ -191,8 +227,9 @@ class AdminController < ApplicationController
   end
 
   def departments
-    user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    user = User.current
+    #user = User.where(id: session[:user]).first
+    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @departments = []
       Department.all.each do |dep|
@@ -218,7 +255,6 @@ class AdminController < ApplicationController
         flash[:danger] = e
       end
     end
-
     render nothing: true
   end
 
@@ -280,8 +316,9 @@ class AdminController < ApplicationController
   end
 
   def ticket_statuses
-    user = User.where(id: session[:user]).first
-    @user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
+    user = User.current
+    #user = User.where(id: session[:user]).first
+    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @ticket_statuses = []
       TicketStatus.all.each do |t_s|

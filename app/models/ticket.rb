@@ -8,7 +8,15 @@ class Ticket < ActiveRecord::Base
 
   private
   def assign_reference
-    self.update_column(:title, "STR-%06d" % self.id)
+    strs = []
+    3.times do |i|
+      strs[i] = ('A'..'Z').to_a.shuffle[0,3].join
+    end
+    start_string = "%06d" % self.id
+    middle = start_string.length/2
+    first_hex = "%02X" % start_string.slice(0, middle)
+    last_hex = "%02X" % start_string.slice(middle, start_string.size)
+    self.update_column(:title, "#{strs[0]}-#{first_hex}-#{strs[1]}-#{last_hex}-#{strs[2]}")
   end
 
   def send_mail
