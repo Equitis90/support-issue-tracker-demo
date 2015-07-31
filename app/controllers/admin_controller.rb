@@ -27,17 +27,25 @@ class AdminController < ApplicationController
   def tickets
     @tickets = []
     user = User.current
-    #user = User.where(id: session[:user]).first
-    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user.department_id
       Ticket.joins(:department, :ticket_status).where(department_id: user.department_id).each do |ticket|
-        @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                     creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        @tickets << {id: ticket.id,
+                     reference: ticket.title,
+                     department: ticket.department.title,
+                     status: ticket.ticket_status.title,
+                     creator_name: ticket.creator_name,
+                     creator_email: ticket.creator_email
+        }
       end
     else
       Ticket.joins(:department, :ticket_status).all.each do |ticket|
-        @tickets << {id: ticket.id, reference: ticket.title, department: ticket.department.title, status: ticket.ticket_status.title,
-                     creator_name: ticket.creator_name, creator_email: ticket.creator_email}
+        @tickets << {id: ticket.id,
+                     reference: ticket.title,
+                     department: ticket.department.title,
+                     status: ticket.ticket_status.title,
+                     creator_name: ticket.creator_name,
+                     creator_email: ticket.creator_email
+        }
       end
     end
   end
@@ -122,8 +130,6 @@ class AdminController < ApplicationController
       @departments << [dep.title, dep.id]
     end
     user = User.current
-    #user = User.where(id: session[:user]).first
-    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @users = []
       departments = {}
@@ -229,8 +235,6 @@ class AdminController < ApplicationController
 
   def departments
     user = User.current
-    #user = User.where(id: session[:user]).first
-    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @departments = []
       Department.all.each do |dep|
@@ -318,8 +322,6 @@ class AdminController < ApplicationController
 
   def ticket_statuses
     user = User.current
-    #user = User.where(id: session[:user]).first
-    #@user = {id: user.id, username: user.username, department_id: user.department_id, admin: user.admin}
     if user && user.admin
       @ticket_statuses = []
       TicketStatus.all.each do |t_s|
