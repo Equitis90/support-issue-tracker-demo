@@ -57,7 +57,7 @@ class TicketController < ApplicationController
     else
       ticket = Ticket.where(title: params[:ticket_reference]).first
       if ticket
-        if session[:user]
+        if User.current
           if params[:ticket_status].to_i != 0
             begin
               ticket.ticket_status_id = params[:ticket_status].to_i
