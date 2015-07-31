@@ -1,5 +1,6 @@
 class AdminController < ApplicationController
   before_filter :check_for_user, :except => [:admin, :log_in_post]
+
   def check_for_user
     unless User.current
       if session[:user_id]
